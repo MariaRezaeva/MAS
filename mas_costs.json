@@ -1,0 +1,307 @@
+[
+    {
+        "id": "40d037d8da107baa",
+        "type": "tab",
+        "label": "Курсач",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ce55f9eae42348e2",
+        "type": "comment",
+        "z": "40d037d8da107baa",
+        "name": "Агент: Время",
+        "info": "",
+        "x": 130,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "8ac97ce04cbe1cdb",
+        "type": "inject",
+        "z": "40d037d8da107baa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "bb7f7a5edfd9a5d8"
+            ]
+        ]
+    },
+    {
+        "id": "374a08013a736ba5",
+        "type": "mqtt out",
+        "z": "40d037d8da107baa",
+        "name": "",
+        "topic": "currentTime",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "6e37b00139cadcc1",
+        "x": 1190,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "47412427dfca7e65",
+        "type": "mqtt in",
+        "z": "40d037d8da107baa",
+        "name": "",
+        "topic": "currentTime",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "6e37b00139cadcc1",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 500,
+        "wires": [
+            [
+                "d745a91f20a32d07"
+            ]
+        ]
+    },
+    {
+        "id": "fbe96e572b8680d3",
+        "type": "debug",
+        "z": "40d037d8da107baa",
+        "name": "debug 19",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "c703f5552f78cf2b",
+        "type": "comment",
+        "z": "40d037d8da107baa",
+        "name": "Агент: Источник ",
+        "info": "",
+        "x": 140,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "9280455c99ddeaf5",
+        "type": "function",
+        "z": "40d037d8da107baa",
+        "name": "Инициализация агента",
+        "func": "var timerAgent = {};\ntimerAgent.currentTime = Number(12);\nflow.set(\"timerAgent\", timerAgent)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 60,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3764f017ca3c6ec1",
+        "type": "inject",
+        "z": "40d037d8da107baa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 540,
+        "y": 60,
+        "wires": [
+            [
+                "9280455c99ddeaf5"
+            ]
+        ]
+    },
+    {
+        "id": "bb7f7a5edfd9a5d8",
+        "type": "function",
+        "z": "40d037d8da107baa",
+        "name": "расчет текущего времени",
+        "func": "var timerAgent = flow.get(\"timerAgent\")\ntimerAgent.currentTime +=1\nif (timerAgent.currentTime>23) {\n    timerAgent.currentTime=0\n}\nmsg.payload = timerAgent.currentTime\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 120,
+        "wires": [
+            [
+                "374a08013a736ba5",
+                "28a280f87c6e8fad"
+            ]
+        ]
+    },
+    {
+        "id": "28a280f87c6e8fad",
+        "type": "function",
+        "z": "40d037d8da107baa",
+        "name": "сообщение текущее время",
+        "func": "var currentTime = msg.payload;\n\nmsg.payload = `timerAgent: текущее время ${currentTime}`;\n\nreturn msg;\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 220,
+        "wires": [
+            [
+                "3bc8cc7363976667"
+            ]
+        ]
+    },
+    {
+        "id": "3bc8cc7363976667",
+        "type": "debug",
+        "z": "40d037d8da107baa",
+        "name": "debug 20",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "ecea3f466aa87345",
+        "type": "function",
+        "z": "40d037d8da107baa",
+        "name": "Инициализация агента",
+        "func": "var providerAgent = {};\nproviderAgent.dataSet = [100,100,100,100,100,100,100,500,500,500,500,500,500,300,300,300,300,200,200,200,200,200]\n\n\n\n//timerAgent.currentTime = Number(12);\nflow.set(\"providerAgent\", providerAgent)\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ee38f3b61b533d51",
+        "type": "inject",
+        "z": "40d037d8da107baa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 380,
+        "y": 440,
+        "wires": [
+            [
+                "ecea3f466aa87345"
+            ]
+        ]
+    },
+    {
+        "id": "d745a91f20a32d07",
+        "type": "function",
+        "z": "40d037d8da107baa",
+        "name": "расчет предоставляемой электроэнергии",
+        "func": "var providerAgent = flow.get(\"providerAgent\")\nvar currentTime = Number(msg.payload)\nproviderAgent.currentEnergy = providerAgent.dataSet[currentTime]\nmsg.payload = 'providerAgent: предоставляется электроэнергия $[providerAgent.currentEnergy]'\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 500,
+        "wires": [
+            [
+                "fbe96e572b8680d3"
+            ]
+        ]
+    },
+    {
+        "id": "6e37b00139cadcc1",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
